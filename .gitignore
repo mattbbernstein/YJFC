@@ -37,3 +37,6 @@ Makefile*
 CMakeLists.txt.user
 
 YJFC/YJFC.VC.db
+YJFC.VC.db
+QSmtp/x64/
+YJFC-Globals/x64/
