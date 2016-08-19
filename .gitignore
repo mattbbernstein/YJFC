@@ -40,3 +40,9 @@ YJFC/YJFC.VC.db
 YJFC.VC.db
 QSmtp/x64/
 YJFC-Globals/x64/
+Checkout App/x64/Debug/Checkout App.tlog/CL.command.1.tlog
+Checkout App/x64/
+*.opendb
+*.vcxproj
+*.filters
+Checkout App/Output/

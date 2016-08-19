@@ -6,12 +6,12 @@
 #include <QFlags>
 
 enum EquipmentType {
-	UNKOWN,
 	JACKET,
-	GLOVE,
 	PLASTRON,
+	CHEST_PROTECTOR,
 	KNICKERS,
 	BAG,
+	GLOVE,
 	// EPEE SPECIFIC
 	EPEE,
 	EPEE_MASK,
@@ -23,7 +23,8 @@ enum EquipmentType {
 	SABRE,
 	SABRE_MASK,
 	SABRE_LAME,
-	SABRE_GLOVE
+	SABRE_GLOVE,
+	UNKOWN
 };
 
 enum WeaponFlag {
@@ -40,16 +41,16 @@ enum Gender {
 	FEMALE
 };
 
-static QMap<EquipmentType, QString> equipmentCodes = { {JACKET, "JK"}, {GLOVE , "GV"},
-												    {PLASTRON, "PL"}, {KNICKERS, "KN"},  {BAG, "BG"},
+static QMap<EquipmentType, QString> equipmentCodes = { {JACKET, "JK"}, {GLOVE , "GV"},{ PLASTRON, "PL" },
+													{CHEST_PROTECTOR, "CP"}, {KNICKERS, "KN"},  {BAG, "BG"},
 												    {EPEE, "EP"}, {EPEE_MASK, "EM"},
 												    {FOIL, "FO"}, {FOIL_MASK, "FM"}, {FOIL_LAME, "FL"},
 												    {SABRE, "SB"}, {SABRE_MASK, "SM"}, {SABRE_LAME, "SL"}, {SABRE_GLOVE, "SG"},
 													{UNKOWN, "XX"}
 };
 
-static QMap<EquipmentType, QString> equipmentNames = { { JACKET, "Jacket" },{ GLOVE , "Glove" },
-													   { PLASTRON, "Plastron" },{ KNICKERS, "Knickers" },{ BAG, "Bag" },
+static QMap<EquipmentType, QString> equipmentNames = { { JACKET, "Jacket" },{ GLOVE , "Glove" },{ PLASTRON, "Plastron" },
+													   { CHEST_PROTECTOR, "Chest Protector" } ,{ KNICKERS, "Knickers" },{ BAG, "Bag" },
 													   { EPEE, "Epee" },{ EPEE_MASK, "Epee Mask" },
 													   { FOIL, "Foil" },{ FOIL_MASK, "Foil Mask" },{ FOIL_LAME, "Foil Lame" },
 													   { SABRE, "Sabre" },{ SABRE_MASK, "Sabre Mask" },{ SABRE_LAME, "Sabre Lame" },{ SABRE_GLOVE, "Sabre Glove" },

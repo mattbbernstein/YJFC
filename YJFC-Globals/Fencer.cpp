@@ -49,7 +49,7 @@ QString Fencer::printEquipmentList() {
 		Equipment eq = equipment_[i];
 		QString line = equipmentNames[eq.getType()] % ": " % eq.toString();	// NAME: CODE#ID
 		if (i != equipment_.count() - 1) {
-			line = line % "\n";												// New line if not the end of the list
+			line = line % QString("\n");									// New line if not the end of the list
 		}
 		stream << line;														// Add the line to the stream
 	}
@@ -81,9 +81,9 @@ QString Fencer::toString() {
 		if (weaponsFencing_.testFlag(FENCING_FOIL)) stream << "F";
 		if (weaponsFencing_.testFlag(FENCING_SABRE)) stream << "S";
 	}
-	stream << "\n" << email_ << "\n\n";
+	stream << QString("\n") << email_ << QString("\n\n");
 	stream << printEquipmentList();
-	stream << "\n======================================================\n\n";
+	stream << QString("\n======================================================\n\n");
 	return toRet;
 }
 //---------------------------------------------------------------------//

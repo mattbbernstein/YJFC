@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/Images">
+    <file>Resources/show-pw-icon.png</file>
+  </qresource>
+</RCC>
