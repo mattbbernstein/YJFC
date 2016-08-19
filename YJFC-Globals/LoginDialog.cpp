@@ -21,7 +21,9 @@ LoginDialog::LoginDialog(QString defaultUser, QString userLabel, QWidget* parent
 }
 //----------------------------------------------//
 
-LoginDialog::~LoginDialog(){}
+LoginDialog::~LoginDialog(){
+	delete ui;
+}
 
 //==============================================
 // MEMBER FUNCTIONS

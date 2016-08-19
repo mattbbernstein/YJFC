@@ -2,6 +2,7 @@
 #define CHECKOUTAPP_H
 
 #include <QtWidgets/QMainWindow>
+#include <QListWidgetItem>
 #include "Fencer.h"
 
 struct EmailMessage {
@@ -25,13 +26,16 @@ public:
 private:
 	Ui::CheckoutApp* ui;
 	QList<Fencer> fencerList_;
+	int sentMessages_;
 	
 	void setUpSignalsAndSlots();
 
 private slots:
 	void addFencer();
+	void editFencer(QListWidgetItem* item);
 	void saveToFile();
 	void emailFencers();
+	void emailSent(QString status);
 };
 
 #endif // CHECKOUTAPP_H

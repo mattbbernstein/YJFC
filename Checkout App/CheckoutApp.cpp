@@ -28,7 +28,9 @@ CheckoutApp::CheckoutApp(QWidget *parent)	: QMainWindow(parent), ui(new Ui::Chec
 
 }
 
-CheckoutApp::~CheckoutApp(){}
+CheckoutApp::~CheckoutApp(){
+	delete ui;
+}
 
 //=====================================================
 // SET UP
@@ -36,8 +38,8 @@ CheckoutApp::~CheckoutApp(){}
 
 void CheckoutApp::setUpSignalsAndSlots() {
 
-	connect(ui->addFencerButton_,  &QPushButton::clicked, this, &CheckoutApp::addFencer);
-	connect(ui->saveToFileButton_, &QPushButton::clicked, this, &CheckoutApp::saveToFile);
+	connect(ui->addFencerButton_,    &QPushButton::clicked, this, &CheckoutApp::addFencer);
+	connect(ui->saveToFileButton_,   &QPushButton::clicked, this, &CheckoutApp::saveToFile);
 	connect(ui->emailFencersButton_, &QPushButton::clicked, this, &CheckoutApp::emailFencers);
 }
 
@@ -110,20 +112,52 @@ void CheckoutApp::addFencer() {
 
 	QString listLabel = name % " <" % email %">";
 	ui->fencerList_->addItem(listLabel);
+	connect(ui->fencerList_, &QListWidget::itemDoubleClicked, this, &CheckoutApp::editFencer);
 
 	fencerList_.append(newFencer);
 
-	//qDebug() << newFencer.toString();
-	//qDebug() << fencerList_.count();
+	ui->fencerNameInput_->clear();
+	ui->fencerEmailInput_->clear();
+	ui->foilCheckBox_->setChecked(false);
+	ui->epeeCheckBox_->setChecked(false);
+	ui->sabreCheckBox_->setChecked(false);
 }
 //--------------------------------------------------//
+
+void CheckoutApp::editFencer(QListWidgetItem* item) {
+
+	QString itemText = item->text();
+	QString name = itemText.split(" <").first();
+	Fencer selected;
+	for (int i = 0; i < fencerList_.count(); i++) {
+		Fencer testing = fencerList_.at(i);
+		if (testing.getName() == name) {
+			selected = testing;
+			continue;
+		}
+	}
+	if (selected.getName() == QString("NO NAME")){
+		return; // Honestly have no idea how you could get here, but its a guard either way
+	}
+
+	QList<Equipment> kit = selected.getEquipment();
+
+	EquipmentSelectionDialog dialog(selected.getName(), selected.getGender(), selected.getWeaponsFencing());
+	dialog.setKit(kit);
+	int resultCode = dialog.exec();
+	if (resultCode == EquipmentSelectionDialog::Rejected) {
+		return;
+	}
+	QList<Equipment> newKit = dialog.getKit();
+	selected.setAllEquipment(newKit);
+	qDebug() << selected.toString();
+}
+//----------------------------------------------------------------------//
+
 void CheckoutApp::saveToFile() {
 
 	QString path = QFileDialog::getSaveFileName(this, "Save file:", QString(), "*.txt");
 	QFile file(path);
-	//if (!file.exists()) {
-	//	QDir().mkpath(path);
-	//}
 
 	if (file.open(QIODevice::WriteOnly)) {
 		QTextStream writer(&file);
@@ -149,7 +183,8 @@ void CheckoutApp::emailFencers() {
 
 	LoginInformation loginInfo = loginDialog.getLoginInformation();
 	QString host("smtp.gmail.com");
-	Smtp* client = new Smtp(loginInfo.user, loginInfo.password, host);
+	
+	//connect(client, &Smtp::status, this, &CheckoutApp::emailSent);
 
 	QList<EmailMessage> messages;
 	for (int i = 0; i < fencerList_.count(); i++) {
@@ -160,56 +195,15 @@ void CheckoutApp::emailFencers() {
 		QString subject = QString("Checkout for: ") % ui->tournamentNameInput_->text();
 		msg.subject = subject;
 
-		QString opening("If you are receiving this you have checked out items for: ");
-		opening = opening % ui->tournamentNameInput_->text() % QString("\n");
-		opening = opening % "Below is your checkout information\n\n";
-
-		QString body = opening % fencer.toString();
+		QString body = fencer.toString();
 		msg.body = body;
 
-		messages.append(msg);
-	}
-
-	for (int i = 0; i < messages.count(); i++) {
-		EmailMessage msg = messages.at(i);
+		Smtp* client = new Smtp(loginInfo.user, loginInfo.password, host);
 		client->sendMail(msg.from, msg.to, msg.subject, msg.body);
 	}
-
-	//SmtpClient client("smtp.gmail.com", 465, SmtpClient::SslConnection);
-	//client.setUser(loginInfo.user);
-	//client.setPassword(loginInfo.password);
-
-	//client.connectToHost();
-	//client.login();
-	////QList<MimeMessage> messageList;
-	//for (int i = 0; i < fencerList_.count(); i++) {
-	//	Fencer fencer = fencerList_.at(i);
-	//	MimeMessage message;
-
-	//	message.setSender(new EmailAddress(loginInfo.user, QString("Yellow Jacket Fencing")));
-	//	message.addRecipient(new EmailAddress(fencer.getEmail(), fencer.getName()));
-	//	QString subject = QString("Checkout for: ") % ui->tournamentNameInput_->text();
-	//	message.setSubject(subject);
-
-	//	QString opening("If you are receiving this you have checked out items for: ");
-	//	opening = opening % ui->tournamentNameInput_->text() % QString("\n");
-	//	opening = opening % "Below is your checkout information\n\n";
-	//	MimeText mimeOpening(opening);
-
-	//	MimeText text(fencer.toString());
-
-	//	message.addPart(&mimeOpening);
-	//	message.addPart(&text);
-
-	//	client.sendMail(message);
-	//	//messageList.append(message);
-	//}
-
-	////for (int i = 0; i < messageList.count(); i++) {
-	////	MimeMessage msg = messageList[i];
-	////	client.sendMail(msg);
-	////}
-
-	//client.quit();
 }
 //--------------------------------------------------//
+
+void CheckoutApp::emailSent(QString status) {
+	qDebug() << status;
+}

@@ -42,7 +42,9 @@ EquipmentSelectionDialog::EquipmentSelectionDialog(QString name, Gender gender, 
 }
 //------------------------------------------------------//
 
-EquipmentSelectionDialog::~EquipmentSelectionDialog(){}
+EquipmentSelectionDialog::~EquipmentSelectionDialog(){
+	delete ui;
+}
 //------------------------------------------------------//
 
 //==========================================================
@@ -74,15 +76,35 @@ QList<Equipment> EquipmentSelectionDialog::getKit() {
 }
 //-----------------------------------------------------//
 
+void EquipmentSelectionDialog::setKit(QList<Equipment> kit) {
+	for (int i = 0; i < kit.count(); i++) {
+		Equipment eq = kit.at(i);
+		EquipmentType type = eq.getType();
+		int id = eq.getId();
+		QLineEdit* edit = (QLineEdit*)(ROW2WIDGET(type));
+		QString lineText = edit->text();
+		if (lineText == "0") { // Set the line if it's empty
+			edit->setText(QString::number(id));
+		} else { // Otherwise add a new number to the line
+			QString newLine = lineText.append(" ").append(QString::number(id));
+			edit->setText(newLine);
+		}
+	}
+}
+//-----------------------------------------------------//
+
 bool EquipmentSelectionDialog::testInputs() {
 
 	for (int i = 0; i < ui->formLayout->rowCount(); i++) {
 		QLineEdit* lineEdit = (QLineEdit*)(ROW2WIDGET(i));
 		QString text = lineEdit->text();
-		bool ok;
-		int num = text.toInt(&ok);
-		if (!ok) {
-			return false;
+		QStringList idList = text.split(QRegExp("\\s|,"));
+		for (int j = 0; j < idList.count(); j++) {
+			bool ok;
+			int num = idList.at(j).toInt(&ok);
+			if (!ok) {
+				return false;
+			}
 		}
 	}
 
@@ -104,3 +126,5 @@ void EquipmentSelectionDialog::saveRequested() {
 		QMessageBox::critical(0, "Error", text);
 	}
 }
+//---------------------------------------------------//
+

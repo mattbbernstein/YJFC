@@ -65,6 +65,11 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>userEdit_</tabstop>
+  <tabstop>passEdit_</tabstop>
+  <tabstop>showPassowrdButton_</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

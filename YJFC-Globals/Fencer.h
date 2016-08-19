@@ -29,7 +29,11 @@ public:
 
 	QString getName() { return name_; }
 	QString getEmail() { return email_; }
+	QList<Equipment> getEquipment() { return equipment_; }
+	Gender getGender() { return gender_; }
+	Weapons getWeaponsFencing() { return weaponsFencing_; }
 	void setEmail(QString addr) { email_ = addr; }
+	void setAllEquipment(QList<Equipment> kit) { equipment_ = kit; }
 
 
 private:

@@ -38,6 +38,7 @@ public:
 	~EquipmentSelectionDialog();
 
 	QList<Equipment> getKit();
+	void setKit(QList<Equipment>);
 
 private:
 	Ui::EquipmentSelectionDialog* ui;
